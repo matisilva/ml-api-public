@@ -1,0 +1,4 @@
+spanish_sentiment_analysis==1.0.0 
+ipython==7.8.0 
+redis==3.3.11
+

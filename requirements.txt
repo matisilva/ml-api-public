@@ -1,0 +1,4 @@
+-r api/requirements.txt
+-r model/requirements.txt
+nose==1.3.7
+requests==2.22.0
