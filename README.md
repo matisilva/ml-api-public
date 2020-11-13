@@ -25,3 +25,11 @@ pip install -r requirements.txt
 ```
 nosetests [<package_name>]
 ```
+
+- Si no tienen python3.5 y no lo quieren instalar, pueden probar instanciando un container con python 3.5 montando un volumen para ver los cambios dinamicamente
+
+```
+docker run -v $(pwd):/src -it --net=host -w /src python:3.5 bash
+pip install -r requirements.txt
+nosetests [<package_name>]
+```
