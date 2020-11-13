@@ -17,7 +17,7 @@ $ docker-compose down
 
 - Instalar un virtualenv con los requirements.txt del origen
 ```
-virtualenv --python=python3 .env
+virtualenv --python=python3.5 .env
 source .env/bin/activate
 pip install -r requirements.txt
 ```
