@@ -15,6 +15,7 @@ services:
       - model
     volumes:
       - ./feedback:/src/feedback
+    tty: true
     logging:
       driver: "gelf"
       options:
