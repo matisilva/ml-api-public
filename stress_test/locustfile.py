@@ -1,18 +1,15 @@
-from locust import HttpLocust, TaskSet, task
+import time
+from locust import HttpUser, task
 
-
-class UserBehavior(TaskSet):
+class QuickstartUser(HttpUser):
 
     @task(1)
     def index(self):
-        raise NotImplementedError
+        self.client.get('/')
 
     @task(3)
     def predict(self):
-        raise NotImplementedError
+        self.client.post('/predict', params={'text': 'dolar'})
 
-
-class APIUser(HttpLocust):
-    task_set = UserBehavior
-    min_wait = 1000
-    max_wait = 5000
+    def on_start(self):
+        pass

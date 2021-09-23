@@ -1,17 +1,14 @@
 # -*- coding: utf-8 -*-
-
-########################################################################
-# COMPLETAR AQUI: Crear conexion a redis y asignarla a la variable "db".
-########################################################################
-db = None
-########################################################################
+import serializers
+from external import redis_client, kafka_consumer
+from classifier import SentimentClassifier
 
 ########################################################################
 # COMPLETAR AQUI: Instanciar modelo de análisis de sentimientos.
 # Use classifier.SentimentClassifier de la libreria
 # spanish_sentiment_analysis ya instalada
 ########################################################################
-model = None
+model = SentimentClassifier()
 ########################################################################
 
 
@@ -38,8 +35,14 @@ def sentiment_from_score(score):
     # COMPLETAR AQUI
     ####################################################################
     sentiment = None
-    raise NotImplementedError
     ####################################################################
+
+    if score < .45:
+        sentiment = 'Negativo'
+    elif score < .55:
+        sentiment = 'Neutral'
+    else:
+        sentiment = 'Positivo'
 
     return sentiment
 
@@ -70,9 +73,11 @@ def predict(text):
     # Luego utilice la función "sentiment_from_score" de este módulo
     # para obtener el sentimiento ("sentiment") a partir del score.
     ####################################################################
-    raise NotImplementedError
+    score = model.predict(text)
+    sentiment = sentiment_from_score(score)
     ####################################################################
-
+    import time
+    time.sleep(3)
     return sentiment, score
 
 
@@ -83,39 +88,28 @@ def classify_process():
     Toda la comunicación se realiza a travez de Redis, por ello esta
     función no posee atributos de entrada ni salida.
     """
-    # Iteramos intentando obtener trabajos para procesar
-    while True:
-        ##################################################################
-        # COMPLETAR AQUI: Obtenga un batch de trabajos encolados, use
-        # lrange de Redis. Almacene los trabajos en la variable "queue".
-        ##################################################################
-        queue = None
-        ##################################################################
-
-        # Iteramos por cada trabajo obtenido
-        for q in queue:
-            ##############################################################
-            # COMPLETAR AQUI:
-            #     - Utilice nuestra función "predict" para procesar la
-            #       sentencia enviada en el trabajo.
-            #     - Cree un diccionario con dos entradas: "prediction" y
-            #       "score" donde almacenara los resultados obtenidos.
-            #     - Utilice la funcion "set" de Redis para enviar la
-            #       respuesta. Recuerde usar como "key" el "job_id".
-            #
-            ##############################################################
-            raise NotImplementedError
-            ##############################################################
-
-        ##################################################################
-        # COMPLETAR AQUI: Use ltrim de Redis para borrar los trabajos ya
-        # procesados. Luego duerma durante unos milisengundos antes de
-        # pedir por mas trabajos.
-        ##################################################################
-        raise NotImplementedError
-        ##################################################################
-
+    # Iteramos por cada trabajo obtenido
+    for q in kafka_consumer:
+        ##############################################################
+        # COMPLETAR AQUI:
+        #     - Utilice nuestra función "predict" para procesar la
+        #       sentencia enviada en el trabajo.
+        #     - Cree un diccionario con dos entradas: "prediction" y
+        #       "score" donde almacenara los resultados obtenidos.
+        #     - Utilice la funcion "set" de Redis para enviar la
+        #       respuesta. Recuerde usar como "key" el "job_id".
+        #
+        ##############################################################
+        q = q.value
+        # processing
+        job_id = q['id']
+        sentiment, score = predict(q['text'])
+        # output
+        response = {'prediction': sentiment, 'score': score}
+        redis_client.set(job_id, serializers.serialize_json(response))
+        ##############################################################
 
 if __name__ == "__main__":
     print('Launching ML service...')
     classify_process()
+    print('Exited')

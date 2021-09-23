@@ -1,13 +1,27 @@
 version: "3.2"
 services:
+  traefik:
+    image: "traefik:v2.0.0-rc3"
+    container_name: "traefik"
+    command:
+      - "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
   api:
     image: flask_api
-    container_name: ml_api
+    depends_on:
+      - kafka
     build:
       context: ./api
-    command: "gunicorn --workers=8 --bind 0.0.0.0:5000 app:app"
-    ports:
-      - "80:5000"
+    command: "gunicorn -k gevent --workers=1 --threads=8 --bind 0.0.0.0:80 app:app"
     environment:
       - FLASK_DEBUG=1
     depends_on:
@@ -16,20 +30,46 @@ services:
     volumes:
       - ./feedback:/src/feedback
     tty: true
-    logging:
-      driver: "gelf"
-      options:
-        gelf-address: "udp://localhost:12201"
-        tag: "api-logs"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.api.loadbalancer.server.port=80"
+      - "traefik.http.routers.api.rule=Host(`localhost`)"
+      - "traefik.http.routers.api.entrypoints=web"
+
+    # logging:
+    #   driver: "gelf"
+    #   options:
+    #     gelf-address: "udp://localhost:12201"
+    #     tag: "api-logs"
 
   redis:
     image: redis:5.0.6
 
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
   model:
     image: ml_service
-    container_name: ml_service
+    depends_on:
+      - kafka
     build:
       context: ./model
+    tty: true
     command: "python3 /src/ml_service.py"
     depends_on:
       - redis
