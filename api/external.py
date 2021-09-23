@@ -7,24 +7,11 @@ import serializers
 ########################################################################
 # COMPLETAR AQUI: Crear conexion a redis y asignarla a la variable "db".
 ########################################################################
-redis_client = redis.Redis(
-    host=settings.REDIS_HOST,
-    port=settings.REDIS_PORT,
-    db=settings.REDIS_DB
-)
+redis_client = None
 
-kafka_producer = kafka.KafkaProducer(
-   value_serializer=serializers.serialize_json,
-   bootstrap_servers=settings.KAFKA_SERVERS,
-)
+kafka_producer = None
 
-kafka_consumer = kafka.KafkaConsumer(
-    settings.KAFKA_TOPIC,
-    value_deserializer=serializers.deserialize_json,
-    bootstrap_servers=settings.KAFKA_SERVERS,
-    auto_offset_reset='earliest',
-    group_id=settings.KAFKA_TOPIC
-)
+kafka_consumer = None
 ########################################################################
 
 def startup():

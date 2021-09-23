@@ -31,11 +31,6 @@ def sentiment_from_score(score):
     sentiment : str
         Una de las siguientes etiquetas: "Negativo", "Neutral" o "Positivo".
     """
-    ####################################################################
-    # COMPLETAR AQUI
-    ####################################################################
-    sentiment = None
-    ####################################################################
 
     if score < .45:
         sentiment = 'Negativo'
@@ -73,11 +68,12 @@ def predict(text):
     # Luego utilice la función "sentiment_from_score" de este módulo
     # para obtener el sentimiento ("sentiment") a partir del score.
     ####################################################################
-    score = model.predict(text)
-    sentiment = sentiment_from_score(score)
+    score = None
+    sentiment = None
+    # ADDING EXTRA TIME TO SIMULATE A HEAVY PREDICTION
+    # import time
+    # time.sleep(3)
     ####################################################################
-    import time
-    time.sleep(3)
     return sentiment, score
 
 
@@ -90,6 +86,7 @@ def classify_process():
     """
     # Iteramos por cada trabajo obtenido
     for q in kafka_consumer:
+        q = q.value
         ##############################################################
         # COMPLETAR AQUI:
         #     - Utilice nuestra función "predict" para procesar la
@@ -100,13 +97,7 @@ def classify_process():
         #       respuesta. Recuerde usar como "key" el "job_id".
         #
         ##############################################################
-        q = q.value
-        # processing
-        job_id = q['id']
-        sentiment, score = predict(q['text'])
-        # output
-        response = {'prediction': sentiment, 'score': score}
-        redis_client.set(job_id, serializers.serialize_json(response))
+        pass
         ##############################################################
 
 if __name__ == "__main__":

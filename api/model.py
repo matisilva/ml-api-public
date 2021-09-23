@@ -15,14 +15,9 @@ def _send_message(text_data):
     #       similar, deberá ser de tipo string.
     #     - "text": texto que se quiere procesar, deberá ser de tipo
     #       string.
-    # Luego utilice rpush de Redis para encolar la tarea.
+    # Luego utilice kafka_producer para encolar la tarea.
     #################################################################
     job_id = str(uuid4())
-    job_data = {
-        'id': job_id,
-        'text': text_data
-    }
-    kafka_producer.send(settings.KAFKA_TOPIC, job_data)
     #################################################################
     return job_id
 
@@ -36,16 +31,9 @@ def _receive_response(job_id):
     #     2. Si no obtuvimos respuesta, lanzar exception ValueError
     #     3. Si obtuvimos respuesta, extraiga la predicción y el
     #        score para ser devueltos como salida de esta función.
+    #     4. Eliminar los resultados de la BD temporal.
     #################################################################
-    response = redis_client.get(job_id)
-    if response is None:
-        raise ValueError
-
-    response = serializers.deserialize_json(response)
-    prediction = response['prediction']
-    score = response['score']
-
-    redis_client.delete(job_id)
+    prediction, score = None, None
     #################################################################
     return prediction, score
 
@@ -73,6 +61,7 @@ def model_predict(text_data):
     job_id = _send_message(text_data)
     prediction, score = _receive_response(job_id)
 
+    # TODO hacer un decorador para esto
     print(json.dumps({
         "text": text_data,
         "prediction": prediction,
