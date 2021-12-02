@@ -1,5 +1,5 @@
 # Despliegue de sistemas predictivos - Práctico 1
-> Diplodatos 2019
+> Diplodatos 2021
 
 En este proyecto, construiremos y desplegaremos nuestra propia API que brindará servicios de Machine Learning, en este caso, predicción de sentimientos para oraciones en Español.
 

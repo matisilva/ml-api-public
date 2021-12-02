@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import serializers
-from external import redis_client, kafka_consumer
+from external import redis_client, kafka_consumer, startup
 from classifier import SentimentClassifier
 
 ########################################################################
@@ -101,6 +101,8 @@ def classify_process():
         ##############################################################
 
 if __name__ == "__main__":
+    print('External startup')
+    startup()
     print('Launching ML service...')
     classify_process()
     print('Exited')

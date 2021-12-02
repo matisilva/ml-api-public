@@ -1,5 +1,5 @@
 # Despliegue de sistemas predictivos - Práctico 2
-> Diplodatos 2019
+> Diplodatos 2021
 
 En esta segunda iteración, vamos a continuar trabajando en nuestra API para predicción de sentimientos en oraciones, profundizando e implementando lo siguiente:
 

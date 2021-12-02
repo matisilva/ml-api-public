@@ -1,5 +1,5 @@
 # Despliegue de sistemas predictivos
-> Diplodatos 2019
+> Diplodatos 2021
 
 ## Instalar y ejecutar
 

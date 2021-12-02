@@ -30,7 +30,7 @@ def index():
     if text_data:
         #################################################################
         # COMPLETAR AQUI: Envie el texto ingresado para ser procesado
-        # por nuestra función middleware.model_predict.
+        # por nuestra función model_predict.
         # Luego con los resultados obtenidos, complete el diccionario
         # "context" para mostrar la predicción en el frontend.
         #################################################################

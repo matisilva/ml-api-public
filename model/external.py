@@ -17,6 +17,7 @@ kafka_consumer = None
 def startup():
     # Create or setup topic with respective partiions
     client = kafka.KafkaAdminClient(bootstrap_servers=settings.KAFKA_SERVERS)
+
     try:
         client.create_topics(
             [kafka.admin.NewTopic(
@@ -27,6 +28,11 @@ def startup():
             validate_only=False
         )
     except kafka.errors.TopicAlreadyExistsError:
+        pass
+
+    try:
         client.create_partitions({
             settings.KAFKA_TOPIC: kafka.admin.new_partitions.NewPartitions(settings.KAFKA_PARTITIONS)
         })
+    except kafka.errors.InvalidPartitionsError:
+        pass
