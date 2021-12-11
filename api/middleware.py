@@ -4,7 +4,6 @@ import settings
 import serializers
 from uuid import uuid4
 from retry import retry
-from external import redis_client, kafka_producer
 
 
 def _send_message(text_data):
@@ -17,6 +16,7 @@ def _send_message(text_data):
     #       string.
     # Luego utilice kafka_producer para encolar la tarea.
     #################################################################
+    from external import redis_client, kafka_producer
     job_id = str(uuid4())
     #################################################################
     return job_id
@@ -33,6 +33,7 @@ def _receive_response(job_id):
     #        score para ser devueltos como salida de esta función.
     #     4. Eliminar los resultados de la BD temporal.
     #################################################################
+    from external import redis_client, kafka_producer
     prediction, score = None, None
     #################################################################
     return prediction, score

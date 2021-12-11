@@ -5,7 +5,7 @@ from flask import (
     jsonify,
     render_template,
 )
-from model import model_predict
+from middleware import model_predict
 
 router = Blueprint('app_name',
                    __name__,
@@ -42,12 +42,10 @@ def index():
 
 @router.route('/feedback', methods=['GET', 'POST'])
 def feedback():
-    """
-    [Práctico 2 - No completar]
-    Esta función nos permitirá darle feedback a nuestra API
-    para los casos en los que clasificamos una oración
-    con un sentimiento erroneo.
-    """
+    #################################################################
+    # OPCIONAL COMPLETAR AQUI: guardar la informacion envianda en un archivo
+    # en /src/feedback. Luego podran usar esa informacion para reentrenar
+    #################################################################
     context = {
         'text': None,
         'prediction': None,

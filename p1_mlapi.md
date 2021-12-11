@@ -10,6 +10,7 @@ La estructura base del proyecto será la siguiente:
 │   ├── Dockerfile
 │   ├── app.py
 │   ├── middleware.py
+│   ├── external.py
 │   ├── views.py
 │   ├── settings.py
 │   ├── templates
@@ -19,6 +20,7 @@ La estructura base del proyecto será la siguiente:
 ├── model
 │   ├── Dockerfile
 │   ├── ml_service.py
+│   ├── external.py
 │   ├── settings.py
 │   └── tests
 │       └── test_model.py
@@ -38,12 +40,14 @@ Veamos una descripción rasgos generales de cada modulo:
         - *index*: Encargado de renderizar un frontend en el cual el usuario puede escribir oraciones y obtener el sentimiento de las mismas
         - *predict*: Método POST que recibe un texto y nos devuelve una predicción de sentimiento del mismo. Este endpoint es útil como acceso genérico para integrarse con otras plataformas ya que puede consultarse utilizando algún lenguaje de programación como Python, Java, etc.
     - `api/settings.py`: Contiene las configuraciones generales de nuestra API.
+    - `api/external.py`: Implementacion de comunicacion entre servicios.
     - `api/templates`: Contiene el frontend de nuestro servicio.
     - `api/tests`: Suite de tests.
 - model: Módulo con las funciones necesarias para obtener tareas desde Redis y procesarlas con nuestro modelo de Machine Learning. Una vez obtenidos los resultados, debemos encolarlos para que sean devueltos al usuario. Utilizaremos un modelo de analisis de sentimientos para oraciones en español ya entrenado que puede ser instalado simplemente con pip ([link](https://github.com/aylliote/senti-py)).
     - `model/ml_service.py`: Corre un hilo que se encarga de obtener tareas, procesarlas y devolver una respuesta.
+    - `model/external.py`: Implementacion de comunicacion entre servicios.
     - `model/settings.py`: Configuraciones generales para nuestro modelo.
     - `model/tests`: Suite de tests.
 - tests: Contiene tests de integración para validar que nuestro servicio funciona correctamente end-to-end, partiendo desde el punto de entrada (api) hasta el procesamiento y obtención de resultados (model).
 
-Su tarea será completar con el código correspondiente donde sea requerido en los diferentes módulos del proyecto. Puede validar si su funcionamiento es el esperado ejecutando los tests ya brindados.
+Su tarea será completar con el código correspondiente donde sea requerido en los diferentes módulos del proyecto. Puede validar si su funcionamiento es el esperado ejecutando los tests ya brindados. (Para ayuda leer el README.md)

@@ -11,7 +11,7 @@ class TestIntegration(unittest.TestCase):
     def test_ok_positive(self):
         response = requests.request(
             'POST',
-            'http://0.0.0.0/predict',
+            'http://localhost/predict',
             params={'text': self.POS_SENT},
         )
         self.assertEqual(response.status_code, 200)
@@ -22,7 +22,7 @@ class TestIntegration(unittest.TestCase):
     def test_ok_negative(self):
         response = requests.request(
             'POST',
-            'http://0.0.0.0/predict',
+            'http://localhost/predict',
             params={'text': self.NEG_SENT},
         )
         self.assertEqual(response.status_code, 200)
@@ -33,7 +33,7 @@ class TestIntegration(unittest.TestCase):
     def test_ok_neutral(self):
         response = requests.request(
             'POST',
-            'http://0.0.0.0/predict',
+            'http://localhost/predict',
             params={'text': self.NEU_SENT},
         )
         self.assertEqual(response.status_code, 200)
@@ -44,7 +44,7 @@ class TestIntegration(unittest.TestCase):
     def test_template_endpoint(self):
         response = requests.request(
             'GET',
-            'http://0.0.0.0/',
+            'http://localhost/',
         )
         self.assertEqual(response.status_code, 200)
 

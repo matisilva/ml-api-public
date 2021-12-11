@@ -41,7 +41,7 @@ Una vez realizadas las configuraciones iniciales para completar la tarea será n
 
 El objetivo aqui es duplicar nuestra capacidad de respuesta instanciando un "worker" más en nuestra infraestructura. Para ello deberíamos aumentar la cantidad de réplicas que tenemos del contenedor *model* y visualizar las mejoras en grafana usando nuestro cliente locust para exigir la carga. Para ello deberán utilizar el comando `docker-compose scale <SERVICE>=<#INSTANCES>`
 
-## 4. Obtener y almacenar feedback de usuarios
+## (Opcional) 4. Obtener y almacenar feedback de usuarios
 En las views de nuestro proyecto deberán completar el endpoint para feedback y permitir al usuario así acusar una respuesta incorrecta. Almacenar en un csv todos estos reportes para una futura retroalimentación.
 
 ## (Opcional) 5. Usar traefik como un DNS resolver y descubrir sus features
